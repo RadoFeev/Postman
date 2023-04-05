@@ -1,0 +1,293 @@
+{
+	"info": {
+		"_postman_id": "36728b6c-ea5d-4f88-bd17-6fa3bbec8504",
+		"name": "URL Shortener",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25603946"
+	},
+	"item": [
+		{
+			"name": "ListOfURL",
+			"item": [
+				{
+					"name": "ListAllShortURLS",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Check if status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if response type is json\", function () {\r",
+									"    const resBody = pm.response.json();\r",
+									"    pm.expect(typeof(resBody)).to.be.equal(\"object\")\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://shorturl.radostin03.repl.co/api/urls",
+							"protocol": "https",
+							"host": [
+								"shorturl",
+								"radostin03",
+								"repl",
+								"co"
+							],
+							"path": [
+								"api",
+								"urls"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "CREATE NewURL",
+			"item": [
+				{
+					"name": "CreateNewURL",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"\r",
+									"    const respBody = pm.response.json();\r",
+									"    pm.environment.set(\"UrlCode\", respBody.shortCode);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"url\":\"https://cnn.com\", \"shortCode\":\"cnn\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://shorturl.radostin03.repl.co/api/urls",
+							"protocol": "https",
+							"host": [
+								"shorturl",
+								"radostin03",
+								"repl",
+								"co"
+							],
+							"path": [
+								"api",
+								"urls"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "FindingByshortcode",
+			"item": [
+				{
+					"name": "FindingCreatedURL",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Check if data is the same\", function () {\r",
+									"    const respBody = pm.response.json();\r",
+									"    pm.expect(respBody.shortCode, \"Code property\").to.be.equal(\"cnn\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"shortCode\": \"cnn\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://shorturl.radostin03.repl.co/api/urls/{{UrlCode}}",
+							"protocol": "https",
+							"host": [
+								"shorturl",
+								"radostin03",
+								"repl",
+								"co"
+							],
+							"path": [
+								"api",
+								"urls",
+								"{{UrlCode}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "DublicateURL",
+			"item": [
+				{
+					"name": "DublicateSameURL",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"DublicateURL\", function () {\r",
+									"     pm.response.to.have.status(400);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"url\": \"https://nakov.com\",\r\n    \"shortCode\": \"nak\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://shorturl.radostin03.repl.co/api/urls",
+							"protocol": "https",
+							"host": [
+								"shorturl",
+								"radostin03",
+								"repl",
+								"co"
+							],
+							"path": [
+								"api",
+								"urls"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "DeleteURL",
+			"item": [
+				{
+					"name": "DeleteURL",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Check if URL is deleted\", function () {\r",
+									"    const respBody = pm.response.json();\r",
+									"    pm.expect(respBody.msg, \"MSG property\").to.be.equal(\"URL deleted:\" + pm.environment.get(UrlCode));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://shorturl.radostin03.repl.co/api/urls/{{UrlCode}}",
+							"protocol": "https",
+							"host": [
+								"shorturl",
+								"radostin03",
+								"repl",
+								"co"
+							],
+							"path": [
+								"api",
+								"urls",
+								"{{UrlCode}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"url\": \"https://nakov.com\",\r\n    \"shortCode\": \"nak\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://shorturl.radostin03.repl.co/api/urls/1",
+							"protocol": "https",
+							"host": [
+								"shorturl",
+								"radostin03",
+								"repl",
+								"co"
+							],
+							"path": [
+								"api",
+								"urls",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
